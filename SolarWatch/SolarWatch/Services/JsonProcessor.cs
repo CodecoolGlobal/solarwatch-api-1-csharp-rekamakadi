@@ -24,14 +24,14 @@ public class JsonProcessor : IJsonProcessor
     {
         JsonDocument json = JsonDocument.Parse(data);
 
-        return json.RootElement.GetProperty("lat").GetDouble();
+        return json.RootElement[0].GetProperty("lat").GetDouble();
     }
     
     public double ProcessLon(string data)
     {
         JsonDocument json = JsonDocument.Parse(data);
 
-        return json.RootElement.GetProperty("lon").GetDouble();
+        return json.RootElement[0].GetProperty("lon").GetDouble();
     }
 
     // private static DateTime GetDateTimeFromUnixTimeStamp(long timeStamp)
