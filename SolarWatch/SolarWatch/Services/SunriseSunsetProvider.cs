@@ -12,12 +12,15 @@ public class SunriseSunsetProvider : ISunriseSunsetProvider
         _logger = logger;
     }
 
-    public string GetCurrent(string date, double lat, double lon)
+    public async Task<string> GetCurrent(string date, double lat, double lon)
     {
         var url = $"https://api.sunrise-sunset.org/json?lat={lat}&lng={lon}&date={date}";
-        var client = new WebClient();
+        var client = new HttpClient();
         
         _logger.LogInformation("Calling OpenWeather API with url: {url}", url);
-        return client.DownloadString(url);
+
+        var response = await client.GetAsync(url);
+
+        return await response.Content.ReadAsStringAsync();
     }
 }

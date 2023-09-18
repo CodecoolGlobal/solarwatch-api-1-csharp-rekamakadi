@@ -2,5 +2,5 @@
 
 public interface ILatLonProvider
 {
-    string GetCurrent(string cityName);
+    Task<string> GetCurrent(string cityName);
 }

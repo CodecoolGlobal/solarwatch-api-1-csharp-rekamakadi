@@ -23,18 +23,18 @@ public class SunriseSunsetController : ControllerBase
     }
 
     [HttpGet("GetCurrent")]
-    public ActionResult<SunriseSunset> GetCurrent([Required]DateTime date, [Required]string cityName)
+    public async Task<ActionResult<SunriseSunset>> GetCurrent([Required]DateTime date, [Required]string cityName)
     {
         string formattedDate = date.ToString("yyyy'-'M'-'d");
         try
         {
-            var latLonData = _latLonProvider.GetCurrent(cityName);
+            var latLonData = await _latLonProvider.GetCurrent(cityName);
             var lat = _jsonProcessor.ProcessLat(latLonData);
             var lon = _jsonProcessor.ProcessLon(latLonData);
             
             try
             {
-                var sunsetSunriseData = _sunriseSunsetProvider.GetCurrent(formattedDate, lat, lon);
+                var sunsetSunriseData = await _sunriseSunsetProvider.GetCurrent(formattedDate, lat, lon);
                 return Ok(_jsonProcessor.ProcessSunriseSunset(sunsetSunriseData));
             }
             catch (Exception e)
