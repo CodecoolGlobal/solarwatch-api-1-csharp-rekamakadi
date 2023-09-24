@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using DefaultNamespace;
 using Microsoft.AspNetCore.Mvc;
+using SolarWatch.Data;
 using SolarWatch.Services;
 
 namespace SolarWatch.Controllers;
@@ -25,7 +26,14 @@ public class SunriseSunsetController : ControllerBase
     [HttpGet("GetCurrent")]
     public async Task<ActionResult<SunriseSunset>> GetCurrent([Required]DateTime date, [Required]string cityName)
     {
+        await using var dbContext = new SolarWatchApiContext();
         string formattedDate = date.ToString("yyyy'-'M'-'d");
+        var city = dbContext.Cities.FirstOrDefault(c => c.Name == cityName);
+        if (city == null)
+        {
+            return NotFound($"City {cityName}  not found");
+        }
+        
         try
         {
             var cityData = await _cityProvider.GetCurrent(cityName);
