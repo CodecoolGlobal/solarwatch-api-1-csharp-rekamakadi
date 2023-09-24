@@ -1,45 +1,47 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 
 
 namespace SolarWatch.Services;
 
 public class JsonProcessor : IJsonProcessor
 {
-    public SunriseSunset ProcessSunriseSunset(string data)
+    public SunriseSunset ProcessSunriseSunset(string data, string formattedDate)
     {
         JsonDocument json = JsonDocument.Parse(data);
         JsonElement results = json.RootElement.GetProperty("results");
 
         SunriseSunset sunriseSunset = new SunriseSunset
         {
-            Sunrise = results.GetProperty("sunrise").ToString(),
-            Sunset = results.GetProperty("sunset").ToString(),
-            SolarNoon = results.GetProperty("solar_noon").ToString(),
+            ActualDate = DateTime.Parse(formattedDate),
+            Sunrise = GetDateTimeFromString(results.GetProperty("sunrise").ToString()),
+            Sunset = GetDateTimeFromString(results.GetProperty("sunset").ToString()),
+            SolarNoon = GetDateTimeFromString(results.GetProperty("solar_noon").ToString()),
         };
 
         return sunriseSunset;
     }
-
-    public double ProcessLat(string data)
+    public City ProcessCity(string data)
     {
         JsonDocument json = JsonDocument.Parse(data);
+        
+        City city = new City
+        {
+            Name = json.RootElement[0].GetProperty("name").ToString(),
+            Latitude = json.RootElement[0].GetProperty("lat").GetDouble(),
+            Longitude = json.RootElement[0].GetProperty("lon").GetDouble(),
+            State = json.RootElement[0].GetProperty("state").ToString(),
+            Country = json.RootElement[0].GetProperty("country").ToString(),
+        };
 
-        return json.RootElement[0].GetProperty("lat").GetDouble();
+        return city;
     }
     
-    public double ProcessLon(string data)
+    private static DateTime GetDateTimeFromString(string dateToConvert)
     {
-        JsonDocument json = JsonDocument.Parse(data);
-
-        return json.RootElement[0].GetProperty("lon").GetDouble();
+        string timeFormat = "h:mm:ss tt";
+    
+        return DateTime.ParseExact(dateToConvert, timeFormat, CultureInfo.InvariantCulture);
     }
-
-    // private static DateTime GetDateTimeFromUnixTimeStamp(long timeStamp)
-    // {
-    //     DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(timeStamp);
-    //     DateTime dateTime = dateTimeOffset.UtcDateTime;
-    //
-    //     return dateTime;
-    // }
     
 }
