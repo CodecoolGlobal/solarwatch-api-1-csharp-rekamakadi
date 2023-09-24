@@ -3,11 +3,11 @@ using DefaultNamespace;
 
 namespace SolarWatch.Services;
 
-public class LatLonProvider : ILatLonProvider
+public class CityProvider : ICityProvider
 {
-    private readonly ILogger<LatLonProvider> _logger;
+    private readonly ILogger<CityProvider> _logger;
 
-    public LatLonProvider(ILogger<LatLonProvider> logger)
+    public CityProvider(ILogger<CityProvider> logger)
     {
         _logger = logger;
     }

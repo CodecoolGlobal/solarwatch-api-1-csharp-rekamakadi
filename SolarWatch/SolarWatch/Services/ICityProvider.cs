@@ -1,6 +1,6 @@
 ﻿namespace DefaultNamespace;
 
-public interface ILatLonProvider
+public interface ICityProvider
 {
     Task<string> GetCurrent(string cityName);
 }
