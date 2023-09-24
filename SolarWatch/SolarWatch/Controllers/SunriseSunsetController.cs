@@ -12,14 +12,14 @@ public class SunriseSunsetController : ControllerBase
     private readonly ILogger<SunriseSunsetController> _logger;
     private readonly IJsonProcessor _jsonProcessor;
     private readonly ISunriseSunsetProvider _sunriseSunsetProvider;
-    private readonly ILatLonProvider _latLonProvider;
+    private readonly ICityProvider _cityProvider;
 
-    public SunriseSunsetController(ILogger<SunriseSunsetController> logger, IJsonProcessor jsonProcessor, ISunriseSunsetProvider sunriseSunsetProvider, ILatLonProvider latLonProvider)
+    public SunriseSunsetController(ILogger<SunriseSunsetController> logger, IJsonProcessor jsonProcessor, ISunriseSunsetProvider sunriseSunsetProvider, ICityProvider cityProvider)
     {
         _logger = logger;
         _jsonProcessor = jsonProcessor;
         _sunriseSunsetProvider = sunriseSunsetProvider;
-        _latLonProvider = latLonProvider;
+        _cityProvider = cityProvider;
     }
 
     [HttpGet("GetCurrent")]
@@ -28,14 +28,14 @@ public class SunriseSunsetController : ControllerBase
         string formattedDate = date.ToString("yyyy'-'M'-'d");
         try
         {
-            var latLonData = await _latLonProvider.GetCurrent(cityName);
-            var lat = _jsonProcessor.ProcessLat(latLonData);
-            var lon = _jsonProcessor.ProcessLon(latLonData);
+            var cityData = await _cityProvider.GetCurrent(cityName);
+            var lat = _jsonProcessor.ProcessCity(cityData).Latitude;
+            var lon = _jsonProcessor.ProcessCity(cityData).Longitude;
             
             try
             {
                 var sunsetSunriseData = await _sunriseSunsetProvider.GetCurrent(formattedDate, lat, lon);
-                return Ok(_jsonProcessor.ProcessSunriseSunset(sunsetSunriseData));
+                return  Ok( _jsonProcessor.ProcessSunriseSunset(sunsetSunriseData, formattedDate));
             }
             catch (Exception e)
             {
