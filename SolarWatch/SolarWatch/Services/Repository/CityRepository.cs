@@ -2,7 +2,7 @@
 
 namespace SolarWatch.Services.Repository;
 
-public class CityRepository : IGenericRepository<City>
+public class CityRepository : ICityRepository
 {
     public City? GetById(int id)
     {
