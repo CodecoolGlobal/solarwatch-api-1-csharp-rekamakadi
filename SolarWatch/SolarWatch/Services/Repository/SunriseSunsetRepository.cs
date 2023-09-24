@@ -2,7 +2,7 @@
 
 namespace SolarWatch.Services.Repository;
 
-public class SunriseSunsetRepository : IGenericRepository<SunriseSunset>
+public class SunriseSunsetRepository : ISunriseSunsetRepository
 {
     public SunriseSunset? GetById(int id)
     {
@@ -36,5 +36,11 @@ public class SunriseSunsetRepository : IGenericRepository<SunriseSunset>
         using var dbContext = new SolarWatchApiContext();
         dbContext.Update(sunriseSunset);
         dbContext.SaveChanges();
+    }
+
+    public SunriseSunset? GetByDateAndCityId(DateTime date, int cityId)
+    {
+        using var dbContext = new SolarWatchApiContext();
+        return dbContext.SunriseSunsets.FirstOrDefault(s => s.ActualDate == date && s.CityId == cityId);
     }
 }
