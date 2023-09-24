@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using DefaultNamespace;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SolarWatch.Data;
 using SolarWatch.Services;
+using SolarWatch.Services.Repository;
 
 namespace SolarWatch.Controllers;
 
@@ -14,36 +16,48 @@ public class SunriseSunsetController : ControllerBase
     private readonly IJsonProcessor _jsonProcessor;
     private readonly ISunriseSunsetProvider _sunriseSunsetProvider;
     private readonly ICityProvider _cityProvider;
+    private readonly ICityRepository _cityRepository;
+    private readonly ISunriseSunsetRepository _sunriseSunsetRepository;
 
-    public SunriseSunsetController(ILogger<SunriseSunsetController> logger, IJsonProcessor jsonProcessor, ISunriseSunsetProvider sunriseSunsetProvider, ICityProvider cityProvider)
+    public SunriseSunsetController(ILogger<SunriseSunsetController> logger, IJsonProcessor jsonProcessor, ISunriseSunsetProvider sunriseSunsetProvider, ICityProvider cityProvider, ICityRepository cityRepository, ISunriseSunsetRepository sunriseSunsetRepository)
     {
         _logger = logger;
         _jsonProcessor = jsonProcessor;
         _sunriseSunsetProvider = sunriseSunsetProvider;
         _cityProvider = cityProvider;
+        _cityRepository = cityRepository;
+        _sunriseSunsetRepository = sunriseSunsetRepository;
     }
 
     [HttpGet("GetCurrent")]
     public async Task<ActionResult<SunriseSunset>> GetCurrent([Required]DateTime date, [Required]string cityName)
     {
-        await using var dbContext = new SolarWatchApiContext();
         string formattedDate = date.ToString("yyyy'-'M'-'d");
-        var city = dbContext.Cities.FirstOrDefault(c => c.Name == cityName);
+        var city = _cityRepository.GetByName(cityName);
         if (city == null)
         {
-            return NotFound($"City {cityName}  not found");
-        }
-        
-        try
-        {
-            var cityData = await _cityProvider.GetCurrent(cityName);
-            var lat = _jsonProcessor.ProcessCity(cityData).Latitude;
-            var lon = _jsonProcessor.ProcessCity(cityData).Longitude;
-            
             try
             {
-                var sunsetSunriseData = await _sunriseSunsetProvider.GetCurrent(formattedDate, lat, lon);
-                return  Ok( _jsonProcessor.ProcessSunriseSunset(sunsetSunriseData, formattedDate));
+                var cityData = await _cityProvider.GetCurrent(cityName);
+                city = _jsonProcessor.ProcessCity(cityData);
+                _cityRepository.Add(city);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error getting city data");
+                return NotFound("Error getting city data");
+            }
+        }
+
+        var sunriseSunset = _sunriseSunsetRepository.GetByDateAndCityId(date, city.Id);
+
+        if (sunriseSunset == null)
+        {
+            try
+            {
+                var sunsetSunriseData = await _sunriseSunsetProvider.GetCurrent(formattedDate, city.Latitude, city.Longitude);
+                sunriseSunset = _jsonProcessor.ProcessSunriseSunset(sunsetSunriseData, formattedDate, city.Id);
+                _sunriseSunsetRepository.Add(sunriseSunset);
             }
             catch (Exception e)
             {
@@ -51,10 +65,7 @@ public class SunriseSunsetController : ControllerBase
                 return NotFound("Error getting sunsetSunrise data");
             }
         }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error getting lat, lon data");
-            return NotFound("Error getting lat, lon data");
-        }
+
+        return Ok(sunriseSunset);
     }
 }
