@@ -6,7 +6,7 @@ namespace SolarWatch.Services;
 
 public class JsonProcessor : IJsonProcessor
 {
-    public SunriseSunset ProcessSunriseSunset(string data, string formattedDate)
+    public SunriseSunset ProcessSunriseSunset(string data, string formattedDate, int cityId)
     {
         JsonDocument json = JsonDocument.Parse(data);
         JsonElement results = json.RootElement.GetProperty("results");
@@ -17,6 +17,7 @@ public class JsonProcessor : IJsonProcessor
             Sunrise = GetDateTimeFromString(results.GetProperty("sunrise").ToString()),
             Sunset = GetDateTimeFromString(results.GetProperty("sunset").ToString()),
             SolarNoon = GetDateTimeFromString(results.GetProperty("solar_noon").ToString()),
+            CityId = cityId
         };
 
         return sunriseSunset;
