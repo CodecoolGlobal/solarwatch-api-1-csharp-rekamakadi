@@ -1,5 +1,8 @@
 using DefaultNamespace;
+using SolarWatch;
 using SolarWatch.Services;
+using SolarWatch.Services.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,6 +14,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ISunriseSunsetProvider, SunriseSunsetProvider>();
 builder.Services.AddSingleton<ICityProvider, CityProvider>();
 builder.Services.AddSingleton<IJsonProcessor, JsonProcessor>();
+builder.Services.AddSingleton<ICityRepository, CityRepository>();
+builder.Services.AddSingleton<ISunriseSunsetRepository, SunriseSunsetRepository>();
+
 
 
 var app = builder.Build();
