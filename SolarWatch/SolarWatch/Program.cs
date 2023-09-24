@@ -9,7 +9,7 @@ builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttri
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ISunriseSunsetProvider, SunriseSunsetProvider>();
-builder.Services.AddSingleton<ILatLonProvider, LatLonProvider>();
+builder.Services.AddSingleton<ICityProvider, CityProvider>();
 builder.Services.AddSingleton<IJsonProcessor, JsonProcessor>();
 
 
