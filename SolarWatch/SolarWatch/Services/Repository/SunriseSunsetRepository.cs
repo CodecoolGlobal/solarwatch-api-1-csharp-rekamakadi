@@ -1,46 +1,47 @@
-﻿using SolarWatch.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SolarWatch.Data;
 
 namespace SolarWatch.Services.Repository;
 
 public class SunriseSunsetRepository : ISunriseSunsetRepository
 {
-    public SunriseSunset? GetById(int id)
+    public async Task<SunriseSunset> GetByIdAsync(InClassName inClassName)
     {
-        using var dbContext = new SolarWatchApiContext();
-        return dbContext.SunriseSunsets.FirstOrDefault(s => s.Id == id);
+        await using var dbContext = new SolarWatchApiContext();
+        return await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == inClassName.Id);
     }
 
-    public IEnumerable<SunriseSunset> GetAll()
+    public async Task<IEnumerable<SunriseSunset>> GetAllAsync()
     {
-        using var dbContext = new SolarWatchApiContext();
-        return dbContext.SunriseSunsets.ToList();
+        await using var dbContext = new SolarWatchApiContext();
+        return await dbContext.SunriseSunsets.ToListAsync();
     }
 
-    public void Add(SunriseSunset sunriseSunset)
+    public async void AddAsync(SunriseSunset sunriseSunset)
     {
-        using var dbContext = new SolarWatchApiContext();
-        dbContext.SunriseSunsets.Add(sunriseSunset);
-        dbContext.SaveChanges();
+        await using var dbContext = new SolarWatchApiContext();
+        await dbContext.SunriseSunsets.AddAsync(sunriseSunset);
+        await dbContext.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async void DeleteAsync(int id)
     {
-        using var dbContext = new SolarWatchApiContext();
-        var sunriseSunset = dbContext.SunriseSunsets.FirstOrDefault(s => s.Id == id);
+        await using var dbContext = new SolarWatchApiContext();
+        var sunriseSunset = await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == id);
         dbContext.SunriseSunsets.Remove(sunriseSunset);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
-    public void Update(SunriseSunset sunriseSunset)
+    public async void UpdateAsync(SunriseSunset sunriseSunset)
     {
-        using var dbContext = new SolarWatchApiContext();
+        await using var dbContext = new SolarWatchApiContext();
         dbContext.Update(sunriseSunset);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
-    public SunriseSunset? GetByDateAndCityId(DateTime date, int cityId)
+    public async Task<SunriseSunset> GetByDateAndCityIdAsync(DateTime date, int cityId)
     {
-        using var dbContext = new SolarWatchApiContext();
+        await using var dbContext = new SolarWatchApiContext();
         return dbContext.SunriseSunsets.FirstOrDefault(s => s.ActualDate == date && s.CityId == cityId);
     }
 }

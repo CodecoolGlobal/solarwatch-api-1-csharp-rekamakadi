@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using DefaultNamespace;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SolarWatch.Data;
@@ -8,6 +9,7 @@ using SolarWatch.Services.Repository;
 
 namespace SolarWatch.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class SunriseSunsetController : ControllerBase
@@ -33,14 +35,14 @@ public class SunriseSunsetController : ControllerBase
     public async Task<ActionResult<SunriseSunset>> GetCurrent([Required]DateTime date, [Required]string cityName)
     {
         string formattedDate = date.ToString("yyyy'-'M'-'d");
-        var city = _cityRepository.GetByName(cityName);
+        var city = await _cityRepository.GetByNameAsync(cityName);
         if (city == null)
         {
             try
             {
                 var cityData = await _cityProvider.GetCurrent(cityName);
                 city = _jsonProcessor.ProcessCity(cityData);
-                _cityRepository.Add(city);
+                _cityRepository.AddAsync(city);
             }
             catch (Exception e)
             {
@@ -49,7 +51,7 @@ public class SunriseSunsetController : ControllerBase
             }
         }
 
-        var sunriseSunset = _sunriseSunsetRepository.GetByDateAndCityId(date, city.Id);
+        var sunriseSunset = await _sunriseSunsetRepository.GetByDateAndCityIdAsync(date, city.Id);
 
         if (sunriseSunset == null)
         {
@@ -57,7 +59,7 @@ public class SunriseSunsetController : ControllerBase
             {
                 var sunsetSunriseData = await _sunriseSunsetProvider.GetCurrent(formattedDate, city.Latitude, city.Longitude);
                 sunriseSunset = _jsonProcessor.ProcessSunriseSunset(sunsetSunriseData, formattedDate, city.Id);
-                _sunriseSunsetRepository.Add(sunriseSunset);
+                _sunriseSunsetRepository.AddAsync(sunriseSunset);
             }
             catch (Exception e)
             {

@@ -2,5 +2,5 @@
 
 public interface ISunriseSunsetRepository : IGenericRepository<SunriseSunset>
 {
-    public SunriseSunset? GetByDateAndCityId(DateTime date, int cityId);
+    public Task<SunriseSunset> GetByDateAndCityIdAsync(DateTime date, int cityId);
 }

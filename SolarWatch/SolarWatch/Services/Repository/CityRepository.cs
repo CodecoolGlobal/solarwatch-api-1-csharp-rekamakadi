@@ -1,32 +1,43 @@
-﻿using SolarWatch.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SolarWatch.Data;
 
 namespace SolarWatch.Services.Repository;
 
+public class InClassName
+{
+    public InClassName(int id)
+    {
+        Id = id;
+    }
+
+    public int Id { get; private set; }
+}
+
 public class CityRepository : ICityRepository
 {
-    public City? GetById(int id)
+    public async Task<City> GetByIdAsync(InClassName inClassName)
     {
-        using var dbContext = new SolarWatchApiContext();
-        return dbContext.Cities.FirstOrDefault(c => c.Id == id);
+        await using var dbContext = new SolarWatchApiContext();
+        return await dbContext.Cities.FirstOrDefaultAsync(c => c.Id == inClassName.Id);
     }
 
-    public IEnumerable<City> GetAll()
+    public async Task<IEnumerable<City>> GetAllAsync()
     {
-        using var dbContext = new SolarWatchApiContext();
-        return dbContext.Cities.ToList();
+        await using var dbContext = new SolarWatchApiContext();
+        return await dbContext.Cities.ToListAsync();
     }
 
-    public void Add(City city)
+    public async void AddAsync(City city)
     {
-        using var dbContext = new SolarWatchApiContext();
-        dbContext.Add(city);
-        dbContext.SaveChanges();
+        await using var dbContext = new SolarWatchApiContext();
+        await dbContext.AddAsync(city);
+        await dbContext.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async void DeleteAsync(int id)
     {
-        using var dbContext = new SolarWatchApiContext();
-        var city = dbContext.Cities.FirstOrDefault(c => c.Id == id);
+        await using var dbContext = new SolarWatchApiContext();
+        var city = await dbContext.Cities.FirstOrDefaultAsync(c => c.Id == id);
         if (city == null)
         {
             throw new Exception($"There is no City in DB with id: {id}");
@@ -34,16 +45,16 @@ public class CityRepository : ICityRepository
         dbContext.Remove(city);
     }
 
-    public void Update(City city)
+    public async void UpdateAsync(City city)
     {
-        using var dbContext = new SolarWatchApiContext();
+        await using var dbContext = new SolarWatchApiContext();
         dbContext.Update(city);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
-    public City? GetByName(string cityName)
+    public async Task<City> GetByNameAsync(string cityName)
     {
-        using var dbContext = new SolarWatchApiContext();
-        return dbContext.Cities.FirstOrDefault(c => c.Name == cityName);
+        await using var dbContext = new SolarWatchApiContext();
+        return await dbContext.Cities.FirstOrDefaultAsync(c => c.Name == cityName);
     }
 }

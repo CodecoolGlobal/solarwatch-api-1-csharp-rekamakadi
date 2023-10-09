@@ -2,5 +2,5 @@
 
 public interface ICityRepository : IGenericRepository<City>
 {
-    public City? GetByName(string cityName);
+    public Task<City> GetByNameAsync(string cityName);
 }
