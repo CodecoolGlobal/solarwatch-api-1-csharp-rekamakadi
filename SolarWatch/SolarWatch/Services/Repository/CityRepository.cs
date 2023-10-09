@@ -3,22 +3,12 @@ using SolarWatch.Data;
 
 namespace SolarWatch.Services.Repository;
 
-public class InClassName
-{
-    public InClassName(int id)
-    {
-        Id = id;
-    }
-
-    public int Id { get; private set; }
-}
-
 public class CityRepository : ICityRepository
 {
-    public async Task<City> GetByIdAsync(InClassName inClassName)
+    public async Task<City> GetByIdAsync(int id)
     {
         await using var dbContext = new SolarWatchApiContext();
-        return await dbContext.Cities.FirstOrDefaultAsync(c => c.Id == inClassName.Id);
+        return await dbContext.Cities.FirstOrDefaultAsync(c => c.Id == id) ?? throw new InvalidOperationException();
     }
 
     public async Task<IEnumerable<City>> GetAllAsync()

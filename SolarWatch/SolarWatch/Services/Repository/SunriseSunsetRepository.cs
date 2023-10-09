@@ -5,10 +5,10 @@ namespace SolarWatch.Services.Repository;
 
 public class SunriseSunsetRepository : ISunriseSunsetRepository
 {
-    public async Task<SunriseSunset> GetByIdAsync(InClassName inClassName)
+    public async Task<SunriseSunset> GetByIdAsync(int id)
     {
         await using var dbContext = new SolarWatchApiContext();
-        return await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == inClassName.Id);
+        return await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == id) ?? throw new InvalidOperationException();
     }
 
     public async Task<IEnumerable<SunriseSunset>> GetAllAsync()
@@ -28,7 +28,7 @@ public class SunriseSunsetRepository : ISunriseSunsetRepository
     {
         await using var dbContext = new SolarWatchApiContext();
         var sunriseSunset = await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == id);
-        dbContext.SunriseSunsets.Remove(sunriseSunset);
+        dbContext.SunriseSunsets.Remove(sunriseSunset ?? throw new InvalidOperationException());
         await dbContext.SaveChangesAsync();
     }
 
@@ -42,6 +42,6 @@ public class SunriseSunsetRepository : ISunriseSunsetRepository
     public async Task<SunriseSunset> GetByDateAndCityIdAsync(DateTime date, int cityId)
     {
         await using var dbContext = new SolarWatchApiContext();
-        return dbContext.SunriseSunsets.FirstOrDefault(s => s.ActualDate == date && s.CityId == cityId);
+        return dbContext.SunriseSunsets.FirstOrDefault(s => s.ActualDate == date && s.CityId == cityId) ?? throw new InvalidOperationException();
     }
 }
