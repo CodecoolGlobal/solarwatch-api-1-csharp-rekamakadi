@@ -5,6 +5,7 @@ using SolarWatch.Services.Repository;
 
 namespace SolarWatch.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class SunriseSunsetController : ControllerBase
@@ -26,18 +27,21 @@ public class SunriseSunsetController : ControllerBase
     }
     
     [HttpGet("/GetOrAddByCityName")]
+    [AllowAnonymous]
     public async Task<ActionResult<SunriseSunset>> GetOrAddByCityName([Required]string cityName)
     {
         return Ok(await _cityRepository.GetByNameAsync(cityName));    
     }
     
     [HttpGet("/GetCity/{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<City>> GetCityById(int id)
     {
         return Ok(await _cityRepository.GetByIdAsync(id));
     }
     
     [HttpPost("/AddCity")]
+    [Authorize(Roles = "Admin")]
     public ActionResult<City> AddCity(City city)
     {
         _cityRepository.AddAsync(city);
@@ -45,6 +49,7 @@ public class SunriseSunsetController : ControllerBase
     }
     
     [HttpPost("/UpdateCity/{id}")]
+    [Authorize(Roles = "Admin")]
     public IActionResult UpdateCity(int id, [FromBody] City request)
     {
         try
@@ -60,6 +65,7 @@ public class SunriseSunsetController : ControllerBase
     }
     
     [HttpDelete("/DeleteCityById/{id}")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteCity(int id)
     {
         try
@@ -83,6 +89,7 @@ public class SunriseSunsetController : ControllerBase
     }
     
     [HttpGet("GetOrAddByDateAndCityName")]
+    [AllowAnonymous]
     public async Task<ActionResult<SunriseSunset>> GetOrAddByDateAndCityName([Required]DateTime date, [Required]string cityName)
     {
         var city = await _cityRepository.GetByNameAsync(cityName);
@@ -92,12 +99,14 @@ public class SunriseSunsetController : ControllerBase
     }
     
     [HttpGet("/GetSsById/{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<City>> GetSsById(int id)
     {
         return Ok(await _sunriseSunsetRepository.GetByIdAsync(id));
     }
     
     [HttpPost("/AddSunriseSunset")]
+    [Authorize(Roles = "Admin")]
     public ActionResult<SunriseSunset> AddSunriseSunset(SunriseSunset sunriseSunset)
     {
         _sunriseSunsetRepository.AddAsync(sunriseSunset);
@@ -105,6 +114,7 @@ public class SunriseSunsetController : ControllerBase
     }
 
     [HttpPost("/UpdateSs/{id}")]
+    [Authorize(Roles = "Admin")]
     public IActionResult UpdateSunriseSunset(int id, [FromBody] SunriseSunset request)
     {
         try
@@ -120,6 +130,7 @@ public class SunriseSunsetController : ControllerBase
     }
 
     [HttpDelete("/DeleteSsById/{id}")]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteSunriseSunset(int id)
     {
         try
