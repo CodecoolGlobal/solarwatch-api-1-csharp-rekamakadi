@@ -37,8 +37,8 @@ public class JsonProcessor : IJsonProcessor
 
         return city;
     }
-    
-    private static DateTime GetDateTimeFromString(string dateToConvert)
+
+    public DateTime GetDateTimeFromString(string dateToConvert)
     {
         string timeFormat = "h:mm:ss tt";
     
