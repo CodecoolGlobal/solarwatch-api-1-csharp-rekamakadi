@@ -14,7 +14,7 @@ public class UsersContext : IdentityDbContext<IdentityUser, IdentityRole, string
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        string connectionString = _configuration.GetConnectionString("DefaultConnection");
+        string connectionString = "Server=localhost,1433;Database=SolarWatch;User Id=sa;Password=Kiskutyafüle32!;Encrypt=False;TrustServerCertificate=True;";
         options.UseSqlServer(connectionString);
     }
 
