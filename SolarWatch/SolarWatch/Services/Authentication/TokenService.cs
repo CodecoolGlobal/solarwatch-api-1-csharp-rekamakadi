@@ -13,8 +13,8 @@ public class TokenService : ITokenService
     
     public string CreateToken(IdentityUser user, string role)
     {
-        var expirateion = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
-        var token = CreateJwtToken(CreateClaims(user, role), CreateSigningCredentials(), expirateion);
+        var expiration = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
+        var token = CreateJwtToken(CreateClaims(user, role), CreateSigningCredentials(), expiration);
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
     }
