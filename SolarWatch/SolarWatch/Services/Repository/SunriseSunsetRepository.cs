@@ -21,7 +21,7 @@ public class SunriseSunsetRepository : ISunriseSunsetRepository
     public async Task<SunriseSunset> GetByIdAsync(int id)
     {
         await using var dbContext = new SolarWatchApiContext();
-        var sunriseSunset = await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == id);
+        var sunriseSunset = await dbContext.SunriseSunsets.FindAsync(id);
         if (sunriseSunset is null)
         {
             _logger.LogError($"There is no SunriseSunset in DB with id: {id}");
@@ -47,7 +47,7 @@ public class SunriseSunsetRepository : ISunriseSunsetRepository
     public async void DeleteAsync(int id)
     {
         await using var dbContext = new SolarWatchApiContext();
-        var sunriseSunset = await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == id);
+        var sunriseSunset = await dbContext.SunriseSunsets.FindAsync(id);
         if (sunriseSunset is null)
         {
             _logger.LogError($"There is no SunriseSunset in DB with id: {id}");
@@ -60,7 +60,7 @@ public class SunriseSunsetRepository : ISunriseSunsetRepository
     public async void UpdateAsync(int id, SunriseSunset request)
     {
         await using var dbContext = new SolarWatchApiContext();
-        var sunriseSunset = await dbContext.SunriseSunsets.FirstOrDefaultAsync(s => s.Id == id);
+        var sunriseSunset = await dbContext.SunriseSunsets.FindAsync(id);
         if (sunriseSunset is null)
         {
             _logger.LogError($"There is no SunriseSunset in DB with id: {id}");

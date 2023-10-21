@@ -21,7 +21,7 @@ public class CityRepository : ICityRepository
     public async Task<City> GetByIdAsync(int id)
     {
         await using var dbContext = new SolarWatchApiContext();
-        var city = await dbContext.Cities.FirstOrDefaultAsync(c => c.Id == id);
+        var city = await dbContext.Cities.FindAsync(id);
         if (city == null)
         {
             _logger.LogError($"There is no City in DB with id: {id}");
@@ -47,7 +47,7 @@ public class CityRepository : ICityRepository
     public async void DeleteAsync(int id)
     {
         await using var dbContext = new SolarWatchApiContext();
-        var city = await dbContext.Cities.FirstOrDefaultAsync(c => c.Id == id);
+        var city = await dbContext.Cities.FindAsync(id);
         if (city == null)
         {
             _logger.LogError($"There is no City in DB with id: {id}");
@@ -60,7 +60,7 @@ public class CityRepository : ICityRepository
     public async void UpdateAsync(int id, City request)
     {
         await using var dbContext = new SolarWatchApiContext();
-        var city = await dbContext.Cities.FirstOrDefaultAsync(c => c.Id == id);
+        var city = await dbContext.Cities.FindAsync(id);
         if (city == null)
         {
             _logger.LogError($"There is no City in DB with id: {id}");
