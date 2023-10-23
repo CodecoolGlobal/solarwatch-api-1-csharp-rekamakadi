@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using SolarWatch.Services;
 
-namespace TestSolarWatch;
+namespace SolarWatch.UnitTests;
 
 [TestFixture]
 public class JsonProcessorTests
