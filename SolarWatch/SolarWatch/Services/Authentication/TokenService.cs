@@ -57,7 +57,7 @@ public class TokenService : ITokenService
 
     private SigningCredentials CreateSigningCredentials()
     {
-        return new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("!SomethingSecret!")),
+        return new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Kiskutyafüle32!")),
         SecurityAlgorithms.HmacSha256);
     }
 }
