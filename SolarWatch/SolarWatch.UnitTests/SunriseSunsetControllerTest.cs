@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using SolarWatch;
 using SolarWatch.Controllers;
 using SolarWatch.Services.Repository;
 
-namespace TestSolarWatch;
+namespace SolarWatch.UnitTests;
 
 [TestFixture]
 public class SunriseSunsetControllerTest
