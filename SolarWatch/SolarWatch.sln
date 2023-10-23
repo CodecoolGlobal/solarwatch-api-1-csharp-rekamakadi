@@ -2,7 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarWatch", "SolarWatch\SolarWatch.csproj", "{86F5BC42-67AC-438D-91A1-D11588B061FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSolarWatch", "TestSolarWatch\TestSolarWatch.csproj", "{FE2357BB-8DEE-4FFA-8D5C-5D674C491CAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarWatch.UnitTests", "SolarWatch.UnitTests\SolarWatch.UnitTests.csproj", "{FE2357BB-8DEE-4FFA-8D5C-5D674C491CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarWatch.IntegrationTests", "SolarWatch.IntegrationTests\SolarWatch.IntegrationTests.csproj", "{EDCC02C6-1957-4D86-BADC-5B962B95D8DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{FE2357BB-8DEE-4FFA-8D5C-5D674C491CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE2357BB-8DEE-4FFA-8D5C-5D674C491CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE2357BB-8DEE-4FFA-8D5C-5D674C491CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDCC02C6-1957-4D86-BADC-5B962B95D8DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDCC02C6-1957-4D86-BADC-5B962B95D8DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDCC02C6-1957-4D86-BADC-5B962B95D8DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDCC02C6-1957-4D86-BADC-5B962B95D8DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

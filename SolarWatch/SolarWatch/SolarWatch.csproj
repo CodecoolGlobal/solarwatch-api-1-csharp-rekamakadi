@@ -8,6 +8,7 @@
   </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="SolarWatch.IntegrationTests" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.11" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10" />
