@@ -44,8 +44,7 @@ public class AuthService : IAuthService
         }
 
         var userRoles = await _userManager.GetRolesAsync(managedUser);
-        string role = userRoles.FirstOrDefault();
-        var accessToken = _tokenService.CreateToken(managedUser, role);
+        var accessToken = _tokenService.CreateToken(managedUser, userRoles[0]);
 
         return new AuthResult(true, managedUser.Email, managedUser.UserName, accessToken);
     }
@@ -63,7 +62,7 @@ public class AuthService : IAuthService
     
         if (addToRole)
         {
-            if (!roleExists.Contains(roleName))
+            if (roleExists.All(r => r != roleName))
             {
                 // Role does not exist, create it
                 var roleCreationResult = await _userManager.AddToRoleAsync(user, roleName);
@@ -76,7 +75,7 @@ public class AuthService : IAuthService
         }
         else
         {
-            if (roleExists.Contains(roleName))
+            if (roleExists.Any(r => r == roleName))
             {
                 // Remove the user from the role
                 var roleRemovalResult = await _userManager.RemoveFromRoleAsync(user, roleName);
