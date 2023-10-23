@@ -5,7 +5,6 @@ using SolarWatch.Services.Repository;
 
 namespace SolarWatch.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class SunriseSunsetController : ControllerBase
@@ -21,6 +20,7 @@ public class SunriseSunsetController : ControllerBase
 
     
     [HttpGet("/GetAllCities")]
+    [Authorize(Roles = "User, Admin")]
     public async Task<ActionResult<List<City>>> GetAllCities()
     {
         return Ok(await _cityRepository.GetAllAsync());
