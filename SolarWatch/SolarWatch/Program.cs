@@ -83,7 +83,7 @@ void ConfigureSwagger()
 
 void AddDbContext()
 {
-    builder.Services.AddDbContext<UsersContext>();
+    builder.Services.AddDbContext<SolarWatchApiContext>(); //Todo: Add options + connection string (Which should be stored as secret... somehow)
 }
 
 void AddAuthentication()
@@ -122,7 +122,7 @@ void AddIdentity()
             options.Password.RequireLowercase = false;
         })
         .AddRoles<IdentityRole>() //Enable Identity roles 
-        .AddEntityFrameworkStores<UsersContext>();
+        .AddEntityFrameworkStores<SolarWatchApiContext>();
 }
 
 void AddAdmin()
@@ -162,10 +162,10 @@ void AddRoles()
 
 async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole("Admin")); //The role string should better be stored as a constant or a value in appsettings
+    await roleManager.CreateAsync(new IdentityRole("Admin")); //Todo: The role string should better be stored as a constant or a value in appsettings
 }
 
 async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole("User")); //The role string should better be stored as a constant or a value in appsettings
+    await roleManager.CreateAsync(new IdentityRole("User")); //Todo: The role string should better be stored as a constant or a value in appsettings
 }
