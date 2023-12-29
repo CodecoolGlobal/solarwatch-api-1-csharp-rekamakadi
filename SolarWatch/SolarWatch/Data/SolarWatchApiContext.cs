@@ -6,13 +6,13 @@ namespace SolarWatch.Data;
 
 public class SolarWatchApiContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
-    public DbSet<City> Cities { get; set; }
-    public DbSet<SunriseSunset> SunriseSunsets { get; init; }
+    public DbSet<City>? Cities { get; set; }
+    public DbSet<SunriseSunset>? SunriseSunsets { get; init; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(
-            "Server=localhost,1433;Database=SolarWatch;User Id=sa;Password=Kiskutyafüle32!;Encrypt=False;TrustServerCertificate=True;");
+        var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+        optionsBuilder.UseSqlServer(connectionString);
     }
     
     protected override void OnModelCreating(ModelBuilder builder)
