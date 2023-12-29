@@ -14,7 +14,7 @@ public class CityProvider : ICityProvider
 
     public async Task<string> GetCurrent(string cityName)
     {
-        var apiKey = "1688e0e4037c768ddf90516fb972cbb9";
+        var apiKey = Environment.GetEnvironmentVariable("MyApiKey");
         var url = $"https://api.openweathermap.org/geo/1.0/direct?q={cityName}&limit=1&appid={apiKey}";
         var client = new HttpClient();
         
