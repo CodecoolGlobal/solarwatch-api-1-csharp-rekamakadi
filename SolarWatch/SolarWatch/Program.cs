@@ -2,6 +2,7 @@ using System.Text;
 using DefaultNamespace;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SolarWatch.Data;
@@ -11,6 +12,7 @@ using SolarWatch.Services.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
+DotNetEnv.Env.Load();
 AddServices();
 ConfigureSwagger();
 AddDbContext();
@@ -83,7 +85,8 @@ void ConfigureSwagger()
 
 void AddDbContext()
 {
-    builder.Services.AddDbContext<SolarWatchApiContext>(); //Todo: Add options + connection string (Which should be stored as secret... somehow)
+    string? connectionString = builder.Configuration["ConnectionString"];
+    builder.Services.AddDbContext<SolarWatchApiContext>(options => options.UseSqlServer(connectionString));
 }
 
 void AddAuthentication()
@@ -162,10 +165,10 @@ void AddRoles()
 
 async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole("Admin")); //Todo: The role string should better be stored as a constant or a value in appsettings
+    await roleManager.CreateAsync(new IdentityRole(builder.Configuration["Roles: Admin"]!));
 }
 
 async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole("User")); //Todo: The role string should better be stored as a constant or a value in appsettings
+    await roleManager.CreateAsync(new IdentityRole(builder.Configuration["Roles: User"]!));
 }
