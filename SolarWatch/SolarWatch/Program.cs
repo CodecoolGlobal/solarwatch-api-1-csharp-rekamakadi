@@ -10,9 +10,10 @@ using SolarWatch.Services;
 using SolarWatch.Services.Authentication;
 using SolarWatch.Services.Repository;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
-DotNetEnv.Env.Load();
 AddServices();
 ConfigureSwagger();
 AddDbContext();
@@ -85,8 +86,7 @@ void ConfigureSwagger()
 
 void AddDbContext()
 {
-    string? connectionString = builder.Configuration["ConnectionString"];
-    builder.Services.AddDbContext<SolarWatchApiContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<SolarWatchApiContext>();
 }
 
 void AddAuthentication()
