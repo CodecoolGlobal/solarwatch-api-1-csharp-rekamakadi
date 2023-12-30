@@ -15,12 +15,15 @@ DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 AddServices();
+AddCors();
 ConfigureSwagger();
 AddDbContext();
 AddAuthentication();
 AddIdentity();
 
 var app = builder.Build();
+
+app.UseCors("ReactAppPolicy");
 
 if (app.Environment.IsDevelopment())
 {
@@ -51,6 +54,21 @@ void AddServices()
     builder.Services.AddSingleton<ISunriseSunsetRepository, SunriseSunsetRepository>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<ITokenService, TokenService>();
+}
+
+void AddCors()
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("ReactAppPolicy", policy =>
+        {
+            policy
+                .WithOrigins("*")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        
+        });
+    });
 }
 
 void ConfigureSwagger()
